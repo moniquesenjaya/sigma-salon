@@ -1,13 +1,13 @@
 from mysql.connector import connect
-
+from decouple import config
 # Connect to the database
 # Double underscore means private. Means that it cannot be imported
 __db = connect(
-  host="sigma.jasoncoding.com",
-  user="alpha",
-  password="bestdatabase",
-  database="sigma_salon",
-  port=5555
+  host=config('HOST'),
+  user=config('USER'),
+  password=config('PASSWORD'),
+  database=config('DATABASE'),
+  port=config('PORT')
 )
 
 # Simple logic that will reconnect if the connection is severed
