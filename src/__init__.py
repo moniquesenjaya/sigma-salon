@@ -4,7 +4,7 @@ from decouple import config
 def create_app():
     app = Flask(__name__)
     app.config['SECRET_KEY'] = config('SECRET_KEY')
-    from src.frontend.views import views
+    from src.views import views
 
     app.register_blueprint(views, url_prefix="/")
 
