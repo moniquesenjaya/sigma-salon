@@ -16,15 +16,26 @@
 {% else %}
 <form method="POST">
 
-    {{form.hidden_tag()}}
     {{form.username.label(class="form-label")}}
     {{form.username(class="form-control")}}
     <br/>
     {{form.password.label(class="form-label")}}
     {{form.password(class="form-control")}}
     <br/>
-    {{form.password_check.label(class="form-label")}}
-    {{form.password_check(class="form-control")}}
+    {{form.first_name.label(class="form-label")}}
+    {{form.first_name(class="form-control")}}
+    <br/>
+    {{form.middle_name.label(class="form-label")}}
+    {{form.middle_name(class="form-control")}}
+    <br/>
+    {{form.last_name.label(class="form-label")}}
+    {{form.last_name(class="form-control")}}
+    <br/>
+    {{form.sex.label(class="form-label")}}
+    {{form.sex(class="form-control")}}
+    <br/>
+    {{form.birthdate.label(class="form-label")}}
+    {{form.birthdate(class="form-control")}}
     <br/>
     {{form.submit(class="btn btn-secondary")}}
 </form>

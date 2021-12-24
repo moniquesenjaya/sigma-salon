@@ -1,6 +1,5 @@
 from flask import Flask, render_template
 from decouple import config
-from db import getDb
 
 def create_app():
     app = Flask(__name__)
