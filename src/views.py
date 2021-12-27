@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, flash
+from flask import Blueprint, render_template, flash, request
 from src.forms import RegisterForm
 
 views = Blueprint("views", __name__)
@@ -51,3 +51,36 @@ def register():
         birthdate=birthdate,
         form=form,
     )
+
+
+@views.route("/register-new", methods=["GET", "POST"])
+def register_new():
+    username = None
+    if request.method == "POST":
+        username = request.form.get("username")
+        password = request.form.get("password")
+        first_name = request.form.get("firstName")
+        last_name = request.form.get("lastName")
+        sex = request.form.get("sex")
+        birthdate = request.form.get("birthdate")
+
+        # Validations
+        if len(username) < 4:
+            flash("Username must be at least 4 characters", category="error")
+        elif len(password) < 4:
+            flash("Password must be at least 4 characters", category="error")
+        elif len(first_name) < 2:
+            flash("First name must be greater than 1 character", category="error")
+        elif len(last_name) < 2:
+            flash("Last name must be greater than 1 character", category="error")
+        elif len(sex) < 1:
+            flash("Sex must be at least 1 character", category="error")
+        elif birthdate == "":
+            flash("Enter a valid birthdate", category="error")
+        else:
+            # Add user to database
+            # TODO: put register stuff here to the db
+            flash("Account created!", category="success")
+            return render_template("register-new.html", username=username)
+
+    return render_template("register-new.html")
