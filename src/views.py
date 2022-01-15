@@ -3,8 +3,13 @@ from flask import Blueprint, render_template, flash, request
 views = Blueprint("views", __name__)
 
 
-@views.route("/")
+@views.route("/", methods=["GET", "POST"])
 def index():
+    if request.method == "POST":
+        # ! Temporary logic
+        position = "Admin"
+        return render_template("index.html", number=100, position=position)
+
     return render_template("index.html", number=100)
 
 

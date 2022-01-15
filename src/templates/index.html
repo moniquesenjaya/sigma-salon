@@ -1,7 +1,13 @@
 {% extends 'base.html' %}
 {% block content %}
-<h1>Home</h1>
+<h1>Welcome to Sigma Salon!</h1>
 <p>I have {{number}} hair dryers</p>
+
+<form method="POST">
+  <div class="form-group">
+    <button type="submit" class="btn btn-primary">Click to become an admin!</button>
+  </div>
+</form>
 {% endblock %}
 
 {% block footer %}
