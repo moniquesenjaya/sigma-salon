@@ -41,3 +41,17 @@ def get_all_tables():
         pass
 
     return results
+
+
+def get_appointments():
+    db = get_db()
+    cursor = db.cursor()
+
+    try:
+        # Query appointments table and service table to get appointments data
+        cursor.execute("SELECT a.appointmentId, a.date, a.startTime, a.endTime, a.staffId, a.custId, sr.serviceName, a.progress FROM appointments as a INNER JOIN services AS sr ON sr.serviceId = a.serviceId;")
+    except get_error() as error:
+        print(error)
+        pass
+
+    return cursor.fetchall()

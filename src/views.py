@@ -34,6 +34,11 @@ def manage_staff():
 
 @views.route("/admin/view_appointments", methods=["GET"])
 def view_appointments():
+    if state["logged_in"]:
+        result = tableapi.get_appointments()
+        print(result)
+
+        return render_template("admin/view_appointments.html", state=state, appointments=result)
     return render_template("admin/view_appointments.html", state=state)
 
 
