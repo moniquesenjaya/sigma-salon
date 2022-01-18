@@ -1,11 +1,14 @@
 asgiref==3.4.1
 bcrypt==3.2.0
 black==21.12b0
+certifi==2021.10.8
 cffi==1.15.0
+charset-normalizer==2.0.10
 click==8.0.3
 colorama==0.4.4
 Flask==2.0.2
 Flask-WTF==1.0.0
+idna==3.3
 itsdangerous==2.0.1
 Jinja2==3.0.3
 MarkupSafe==2.0.1
@@ -17,9 +20,11 @@ protobuf==3.19.1
 pycparser==2.21
 python-decouple==3.5
 pytz==2021.3
+requests==2.27.1
 six==1.16.0
 sqlparse==0.4.2
 tomli==1.2.3
 typing_extensions==4.0.1
+urllib3==1.26.8
 Werkzeug==2.0.2
 WTForms==3.0.1
