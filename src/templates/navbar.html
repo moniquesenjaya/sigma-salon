@@ -25,15 +25,15 @@
           <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
             {# Possible actions will be different depending on the position #}
             {% if state["position"] == "Admin" %}
-            <li><a class="dropdown-item" href="#">Manage Staff</a></li>
-            <li><a class="dropdown-item" href="#">View appointments</a></li>
+            <li><a class="dropdown-item" href="{{url_for('views.manage_staff')}}">Manage Staff</a></li>
+            <li><a class="dropdown-item" href="{{url_for('views.view_appointments')}}">View appointments</a></li>
             <li><hr class="dropdown-divider"></li>
-            <li><a class="dropdown-item" href="#">Free Query</a></li>
-            <li><a class="dropdown-item" href="#">View all tables</a></li>
+            <li><a class="dropdown-item" href="{{url_for('views.free_query')}}">Free Query</a></li>
+            <li><a class="dropdown-item" href="{{url_for('views.all_tables')}}">View all tables</a></li>
             {% elif state["position"] == "Staff" %}
-            <li><a class="dropdown-item" href="#">Manage appointments</a></li>
+            <li><a class="dropdown-item" href="{{url_for('views.manage_appointments')}}">Manage appointments</a></li>
             {% else %}
-            <li><a class="dropdown-item" href="#">Book appointments</a>
+            <li><a class="dropdown-item" href="{{url_for('views.book_appointments')}}">Book appointments</a>
             {% endif %}
           </ul>
         </li>
