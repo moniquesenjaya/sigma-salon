@@ -55,3 +55,16 @@ def get_appointments():
         pass
 
     return cursor.fetchall()
+
+
+def get_query(query):
+    db = get_db()
+    cursor = db.cursor()
+
+    try:
+        # Free query, except for certain queries
+        cursor.execute(query)
+    except get_error() as error:
+        return error
+
+    return cursor.fetchall()

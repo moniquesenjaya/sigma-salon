@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+{% block content %}
+{# Check if user is logged in and is also an admin #}
+{% if not state["logged_in"] or not state["position"] == "Admin" %}
+<h1>401 Error</h1>
+<h2>Unauthorized access</h2>
+{% else %}
+<h1>Hi admin! What do you want to query for today?</h1>
+<br/>
+<form method="POST">
+  <div class="form-group">
+    <label for="query">Free Query</label>
+    <input type="text" class="form-control" id="query" name="query"/>
+  </div>
+  <br/>
+  <button type="submit" class="btn btn-primary">Submit</button>
+</form>
+<br/>
+<code>{{result}}</code>
+{% endif %}
+{% endblock %}
