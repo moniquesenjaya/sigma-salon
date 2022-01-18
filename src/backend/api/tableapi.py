@@ -1,5 +1,5 @@
 from src.backend.db import get_db, get_error
-
+import datetime
 
 def get_all_tables():
     results = []
@@ -69,6 +69,40 @@ def get_query(query):
 
     return cursor.fetchall()
 
+
+def register_branch(seatLimit:int, branchName:str, city:str) -> bool:
+    db = get_db()
+    cursor = db.cursor()
+
+    # Query for inserting new branch to the database
+    query = "INSERT INTO branch (seatLimit, branchName, city) VALUES (%s, %s, %s);"
+    cursor.execute(query, (seatLimit, branchName, city))
+    db.commit()
+
+    return True
+
+def register_salary(staffId:int, amount:int) -> bool:
+    db = get_db()
+    cursor = db.cursor()
+
+    # Query for inserting new branch to the database
+    query = "INSERT INTO salary(date, amount,staffId) VALUES (%s, %s, %s);"
+    date = datetime.date.today().isoformat()
+    cursor.execute(query, (date, amount, staffId))
+    db.commit()
+
+    return True
+
+def register_service(service_name:str, time:int) -> bool:
+    db = get_db()
+    cursor = db.cursor()
+
+    # Query for inserting new branch to the database
+    query = "INSERT INTO services (serviceName,time) VALUES (%s, %s);"
+    cursor.execute(query, (service_name, time))
+    db.commit()
+
+    return True
 
 def check_branch(branchId:int) -> bool:
     db = get_db()

@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, redirect, url_for, flash, request
+from flask import Blueprint, render_template, flash, request
 import json
 import src.backend.api.tableapi as tableapi
 import src.backend.api.userapi as userapi
@@ -37,16 +37,59 @@ def free_query():
 
 @views.route("/admin/manage_branch", methods=["GET", "POST"])
 def manage_branch():
+    if request.method == "POST" and state["logged_in"]:
+        seat_limit = request.form.get("seatLimit")
+        branch_name = request.form.get("branchName")
+        city = request.form.get("city")
+
+        if not 2 < len(branch_name) < 40:
+            flash("Branch name must be between 2 and 40 characters", category="error")
+        elif not 2 < len(city) < 20:
+            flash("City must be between 2 and 20 characters", category="error")
+        else:
+            # Add branch to database
+            tableapi.register_branch(int(seat_limit), branch_name, city)
+
+            flash("Branch created!", category="success")
+            return render_template("admin/manage_branch.html", state=state)
+
     return render_template("admin/manage_branch.html", state=state)
 
 
 @views.route("/admin/manage_salary", methods=["GET", "POST"])
 def manage_salary():
+    if request.method == "POST" and state["logged_in"]:
+        staff_id = request.form.get("staffId")
+        amount = request.form.get("amount")
+
+        #validate staffid
+        if not userapi.check_staffId(staff_id):
+            flash("Staff ID not found", category="error")
+        elif not 2 < len(amount) < 11:
+            flash("Amount's number of digits must be between 2 and 11 characters", category="error")
+        else:
+            tableapi.register_salary(int(staff_id), int(amount))
+
+            flash("Salary updated!", category="success")
+            return render_template("admin/manage_salary.html", state=state)
+
     return render_template("admin/manage_salary.html", state=state)
 
 
 @views.route("/admin/manage_service", methods=["GET", "POST"])
 def manage_service():
+    if request.method == "POST" and state["logged_in"]:
+        service_name = request.form.get("serviceName")
+        time = request.form.get("time")
+
+        if not 2 < len(service_name) < 30:
+            flash("Service name must be between 2 and 30 characters", category="error")
+        else:
+            tableapi.register_service(service_name, int(time))
+
+            flash("Service created!", category="success")
+            return render_template("admin/manage_service.html", state=state)
+
     return render_template("admin/manage_service.html", state=state)
 
 

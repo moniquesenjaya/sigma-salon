@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+{% block content %}
+{# Check if user is logged in and is also an admin #}
+{% if not state["logged_in"] or not state["position"] == "Admin" %}
+<h1>401 Error</h1>
+<h2>Unauthorized access</h2>
+{% else %}
+
+{% with messages = get_flashed_messages(with_categories=true) %}
+{% if messages %}
+  {% for category, message in messages %}
+  {% if category == "error" %}
+    <div class="alert alert-danger alert-dismissable fade show">
+      {{ message }}
+      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+    {% else %}
+    <div class="alert alert-success alert-dismissable fade show">
+      {{ message }}
+      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+  {% endif %}
+  {% endfor %}
+{% endif %}
+{% endwith %}
+
+<h1>Hi admin! Add new salary updates here...</h1>
+
+<form method="POST">
+  <div class="form-group">
+    <label for="staffId">Staff Id</label>
+    <input type="text" class="form-control" id="staffId" name="staffId" placeholder="Enter staff Id"/>
+  </div>
+  <br/>
+  <div class="form-group">
+      <label for="amount">Amount</label>
+    <input type="text" class="form-control" id="amount" name="amount" placeholder="Enter amount of money"/>
+  </div>
+  <br/>
+  <button type="submit" class="btn btn-primary">Submit</button>
+  <br/>
+</form>
+{% endif %}
+{% endblock %}

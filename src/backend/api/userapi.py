@@ -67,13 +67,28 @@ def check_username(username:str) -> bool:
     cursor = db.cursor(buffered=True)
 
     # Query for checking all usernames from person table
-    query = "SELECT username FROM person;"
+    query = f"SELECT username FROM person WHERE username={username};"
     cursor.execute(query)
 
     res = cursor.fetchall()
 
     # If username is already registered, return True
-    if username in str(res):
-        return False
-    else:
+    if res:
         return True
+    else:
+        return False
+
+
+def check_staffId(staffId:int) -> bool:
+    db = get_db()
+    cursor = db.cursor(buffered=True)
+
+    query = f"SELECT staffId FROM staffs WHERE staffId = {staffId};"
+    cursor.execute(query)
+
+    res = cursor.fetchall()
+
+    if res:
+        return True
+    else:
+        return False
