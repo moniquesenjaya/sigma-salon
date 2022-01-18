@@ -25,7 +25,6 @@ def login():
             flash("Invalid credentials! Try again!", category="error")
             return render_template("login.html", state=state)
         else:
-            print(result)
             state["username"] = username
             state["person_id"] = result[0]
             state["cust_id"] = result[1]
@@ -59,6 +58,9 @@ def register():
         # Form validations
         if not 4 < len(username) < 30:
             flash("Username must be between 4 and 30 characters", category="error")
+        elif not userapi.check_username(username):
+            # Username not unique
+            flash("Username has been taken!", category="error")
         elif not 4 < len(password) < 100:
             flash("Password must be at least 4 characters", category="error")
         elif not 2 < len(first_name) < 30:
@@ -71,7 +73,8 @@ def register():
             flash("Enter a valid birthdate", category="error")
         else:
             # Add user to database
-            # TODO: put register stuff here to the db
+            userapi.register_user(username, password, first_name, last_name, sex, birthdate)
+
             flash("Account created!", category="success")
             return render_template("register.html", state=state)
 
