@@ -1,13 +1,11 @@
 {% extends 'base.html' %}
 {% block content %}
+{% if not state["logged_in"] %}
 <h1>Welcome to Sigma Salon!</h1>
-<p>I have {{number}} hair dryers</p>
-
-<form method="POST">
-  <div class="form-group">
-    <button type="submit" class="btn btn-primary">Click to become an admin!</button>
-  </div>
-</form>
+{% else %}
+<h1>Welcome {{state["username"]}}!</h1>
+<h2>What are you in for today?</h2>
+{% endif %}
 {% endblock %}
 
 {% block footer %}
@@ -16,8 +14,8 @@
     <p>Made by:</p>
     <ul>
       <li>Jason Jeremy Wijadi - 2440077301</li>
-      <li>Monique Senjaya -</li>
-      <li>Christopher Tendi -</li>
+      <li>Monique Senjaya - 2440061285</li>
+      <li>Christopher Tendi - 2440065030</li>
     </ul>
   </div>
 </footer>

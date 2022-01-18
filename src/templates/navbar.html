@@ -7,40 +7,42 @@
     </button>
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
       <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+        {% if not state["logged_in"] %}
         {# Login button #}
         <li class="nav-item">
-          <a class="nav-link" href="#">Login</a>
+          <a class="nav-link" href="{{url_for('auth.login')}}">Login</a>
         </li>
         {# Register button #}
         <li class="nav-item">
-          <a class="nav-link" href="{{url_for('views.register')}}">Register</a>
+          <a class="nav-link" href="{{url_for('auth.register')}}">Register</a>
         </li>
+        {% else %}
         {# Dropdown actions button #}
-        {% if position %}
         <li class="nav-item dropdown">
           <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
             Actions
           </a>
           <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-          {# Possible actions will be different depending on the position #}
-            {% if position == "Admin" %}
+            {# Possible actions will be different depending on the position #}
+            {% if state["position"] == "Admin" %}
             <li><a class="dropdown-item" href="#">Manage Staff</a></li>
             <li><a class="dropdown-item" href="#">View appointments</a></li>
             <li><hr class="dropdown-divider"></li>
             <li><a class="dropdown-item" href="#">Free Query</a></li>
-            {% elif position == "Staff" %}
+            <li><a class="dropdown-item" href="#">View all tables</a></li>
+            {% elif state["position"] == "Staff" %}
             <li><a class="dropdown-item" href="#">Manage appointments</a></li>
-            {% elif position == "Customer" %}
+            {% else %}
             <li><a class="dropdown-item" href="#">Book appointments</a>
             {% endif %}
           </ul>
         </li>
+        {# Logout button #}
+        <li class="nav-item">
+          <a class="nav-link" href="{{url_for('auth.logout')}}">Logout</a>
+        </li>
         {% endif %}
       </ul>
-      {# <form class="d-flex">
-        <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
-        <button class="btn btn-outline-success" type="submit">Search</button>
-      </form> #}
     </div>
   </div>
 </nav>

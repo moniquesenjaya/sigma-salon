@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 {% block title %}
-Sigma Salon - Register
+Sigma Salon - Login
 {% endblock %}
 {% block content %}
 
@@ -22,7 +22,7 @@ Sigma Salon - Register
 {% endif %}
 {% endwith %}
 
-<h1>Register Now!</h1>
+<h1>Login</h1>
 <br/>
 <form method="POST">
   <div class="form-group">
@@ -33,26 +33,6 @@ Sigma Salon - Register
   <div class="form-group">
     <label for="password">Password</label>
     <input type="password" class="form-control" id="password" name="password" placeholder="Enter your password"/>
-  </div>
-  <br/>
-  <div class="form-group">
-    <label for="firstName">First Name</label>
-    <input type="text" class="form-control" id="firstName" name="firstName" placeholder="Enter your first name">
-  </div>
-  <br/>
-  <div class="form-group">
-    <label for="lastName">Last Name</label>
-    <input type="text" class="form-control" id="lastName" name="lastName" placeholder="Enter your last name">
-  </div>
-  <br/>
-  <div class="form-group">
-    <label for="sex">Sex (male or female)</label>
-    <input type="text" class="form-control" id="sex" name="sex" placeholder="Enter your sex">
-  </div>
-  <br/>
-  <div class="form-group">
-    <label for="birthdate">Birth Date</label>
-    <input type="date" class="form-control" id="birthdate" name="birthdate" placeholder="Enter your birthdate">
   </div>
   <br/>
   <button type="submit" class="btn btn-primary">Submit</button>
