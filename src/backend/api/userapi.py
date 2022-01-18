@@ -42,6 +42,26 @@ def register_user(username:str, password:str, firstName:str, lastName:str, sex:s
     return True
 
 
+def register_staff(username:str, password:str, firstName:str, lastName:str, sex:str, dateOfBirth:str, position:str, branchId:int, serviceId:int) -> bool:
+    db = get_db()
+    cursor = db.cursor()
+
+    # Queries for inserting new user to the database
+    query1 = "INSERT INTO person (username, password, firstName, lastName, sex, dateOfBirth) VALUES (%s, %s, %s, %s, %s, %s);"
+    query2 = "SELECT personId FROM person WHERE username=%s;"
+
+    cursor.execute(query1, (username, password, firstName, lastName, sex, dateOfBirth))
+    db.commit()
+
+    cursor.execute(query2, (username, ))
+    person_id = int(str(cursor.fetchone()).strip('(),')) # Converting from tuple to int
+    query3 = "INSERT INTO staffs (personId,position,branchId,serviceId) VALUES (%s, %s, %s, %s);"
+    cursor.execute(query3, (person_id, position.replace("\"", "\'"), branchId, serviceId))
+    db.commit()
+
+    return True
+
+
 def check_username(username:str) -> bool:
     db = get_db()
     cursor = db.cursor(buffered=True)

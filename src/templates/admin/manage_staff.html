@@ -1,0 +1,79 @@
+{% extends 'base.html' %}
+{% block content %}
+{# Check if user is logged in and is also an admin #}
+{% if not state["logged_in"] or not state["position"] == "Admin" %}
+<h1>401 Error</h1>
+<h2>Unauthorized access</h2>
+{% else %}
+
+{% with messages = get_flashed_messages(with_categories=true) %}
+{% if messages %}
+  {% for category, message in messages %}
+  {% if category == "error" %}
+    <div class="alert alert-danger alert-dismissable fade show">
+      {{ message }}
+      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+    {% else %}
+    <div class="alert alert-success alert-dismissable fade show">
+      {{ message }}
+      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+  {% endif %}
+  {% endfor %}
+{% endif %}
+{% endwith %}
+
+<h1>Hi admin! Add new staff here...</h1>
+
+<form method="POST">
+  <div class="form-group">
+    <label for="username">Username</label>
+    <input type="text" class="form-control" id="username" name="username" placeholder="Enter staff username"/>
+  </div>
+  <br/>
+  <div class="form-group">
+    <label for="password">Password</label>
+    <input type="password" class="form-control" id="password" name="password" placeholder="Enter staff password"/>
+  </div>
+  <br/>
+  <div class="form-group">
+    <label for="firstName">First Name</label>
+    <input type="text" class="form-control" id="firstName" name="firstName" placeholder="Enter staff first name">
+  </div>
+  <br/>
+  <div class="form-group">
+    <label for="lastName">Last Name</label>
+    <input type="text" class="form-control" id="lastName" name="lastName" placeholder="Enter staff last name">
+  </div>
+  <br/>
+  <div class="form-group">
+    <label for="sex">Sex (male or female)</label>
+    <input type="text" class="form-control" id="sex" name="sex" placeholder="Enter staff sex">
+  </div>
+  <br/>
+  <div class="form-group">
+    <label for="birthdate">Birth Date</label>
+    <input type="date" class="form-control" id="birthdate" name="birthdate" placeholder="Enter staff birthdate">
+  </div>
+  <br/>
+  <div class="form-group">
+    <label for="position">Position (Staff or Admin)</label>
+    <input type="text" class="form-control" id="position" name="position" placeholder="Enter desired position">
+  </div>
+  <br/>
+  <div class="form-group">
+    <label for="branch">Branch ID</label>
+    <input type="text" class="form-control" id="branchId" name="branchId" placeholder="Enter desired branch">
+  </div>
+  <br/>
+  <div class="form-group">
+    <label for="service">Service ID</label>
+    <input type="text" class="form-control" id="serviceId" name="serviceId" placeholder="Enter desired service">
+  </div>
+  <br/>
+  <button type="submit" class="btn btn-primary">Submit</button>
+  <br/>
+</form>
+{% endif %}
+{% endblock %}

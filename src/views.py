@@ -1,6 +1,7 @@
 from flask import Blueprint, render_template, redirect, url_for, flash, request
 import json
 import src.backend.api.tableapi as tableapi
+import src.backend.api.userapi as userapi
 import requests as r
 from src.state import state
 
@@ -34,8 +35,65 @@ def free_query():
     return render_template("admin/free_query.html", state=state, query=None)
 
 
+@views.route("/admin/manage_branch", methods=["GET", "POST"])
+def manage_branch():
+    return render_template("admin/manage_branch.html", state=state)
+
+
+@views.route("/admin/manage_salary", methods=["GET", "POST"])
+def manage_salary():
+    return render_template("admin/manage_salary.html", state=state)
+
+
+@views.route("/admin/manage_service", methods=["GET", "POST"])
+def manage_service():
+    return render_template("admin/manage_service.html", state=state)
+
+
 @views.route("/admin/manage_staff", methods=["GET", "POST"])
 def manage_staff():
+    if request.method == "POST" and state["logged_in"]:
+        username = request.form.get("username")
+        password = request.form.get("password")
+        first_name = request.form.get("firstName")
+        last_name = request.form.get("lastName")
+        sex = request.form.get("sex")
+        birthdate = request.form.get("birthdate")
+        position = request.form.get("position")
+        branch_id = request.form.get("branchId")
+        service_id = request.form.get("serviceId")
+
+        # Form validations
+        if not 4 < len(username) < 30:
+            flash("Username must be between 4 and 30 characters", category="error")
+        elif not userapi.check_username(username):
+            # Username not unique
+            flash("Username has been taken!", category="error")
+        elif not 4 < len(password) < 100:
+            flash("Password must be at least 4 characters", category="error")
+        elif not 2 < len(first_name) < 30:
+            flash("First name must be between 2 and 30 characters", category="error")
+        elif not 2 < len(last_name) < 30:
+            flash("Last name must be between 2 and 30 characters", category="error")
+        elif sex.lower() not in ["male", "female"]:
+            flash("Sex must be either male or female", category="error")
+        elif birthdate == "":
+            flash("Enter a valid birthdate", category="error")
+        elif position.capitalize() not in ["Admin", "Staff"]:
+            flash("Position must be either Admin or Staff", category="error")
+        elif not tableapi.check_branch(int(branch_id)):
+            # BranchId doesn't exist
+            flash("BranchId doesn't exist!", category="error")
+        elif not tableapi.check_service(int(service_id)):
+            # ServiceId doesn't exist
+            flash("ServiceId doesn't exist!", category="error")
+        else:
+            # Add staff to database
+            userapi.register_staff(username, password, first_name, last_name, sex, birthdate, position.replace('\"', '\''), int(branch_id), int(service_id))
+
+            flash("Account created!", category="success")
+            return render_template("admin/manage_staff.html", state=state)
+
     return render_template("admin/manage_staff.html", state=state)
 
 

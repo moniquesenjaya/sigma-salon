@@ -68,3 +68,35 @@ def get_query(query):
         return error
 
     return cursor.fetchall()
+
+
+def check_branch(branchId:int) -> bool:
+    db = get_db()
+    cursor = db.cursor(buffered=True)
+
+    # Query for checking all branchId from branch table
+    query = f"SELECT branchId FROM branch WHERE branchId={branchId};"
+    cursor.execute(query)
+
+    res = cursor.fetchone()
+
+    if res:
+        return True
+    else:
+        return False
+
+
+def check_service(serviceId:int) -> bool:
+    db = get_db()
+    cursor = db.cursor(buffered=True)
+
+    # Query for checking all serviceId from services table
+    query = f"SELECT serviceId FROM services WHERE serviceId={serviceId};"
+    cursor.execute(query)
+
+    res = cursor.fetchone()
+
+    if res:
+        return True
+    else:
+        return False
