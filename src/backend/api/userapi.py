@@ -1,4 +1,4 @@
-from src.backend.db import get_db
+from src.backend.db import get_db, get_error
 from typing import Tuple
 
 
@@ -27,18 +27,22 @@ def register_user(username:str, password:str, firstName:str, lastName:str, sex:s
     db = get_db()
     cursor = db.cursor()
 
-    # Queries for inserting new user to the database
-    query1 = "INSERT INTO person (username, password, firstName, lastName, sex, dateOfBirth) VALUES (%s, %s, %s, %s, %s, %s);"
-    query2 = "SELECT personId FROM person WHERE username=%s;"
+    try:
+        # Queries for inserting new user to the database
+        query1 = "INSERT INTO person (username, password, firstName, lastName, sex, dateOfBirth) VALUES (%s, %s, %s, %s, %s, %s);"
+        query2 = "SELECT personId FROM person WHERE username=%s;"
 
-    cursor.execute(query1, (username, password, firstName, lastName, sex, dateOfBirth))
-    db.commit()
+        cursor.execute(query1, (username, password, firstName, lastName, sex, dateOfBirth))
+        db.commit()
 
-    cursor.execute(query2, (username, ))
-    person_id = int(str(cursor.fetchone()).strip('(),')) # Converting from tuple to int
-    query3 = f"INSERT INTO customers(personId, membership) VALUES ({person_id}, 0);"
-    cursor.execute(query3)
-    db.commit()
+        cursor.execute(query2, (username, ))
+        person_id = int(str(cursor.fetchone()).strip('(),')) # Converting from tuple to int
+        query3 = f"INSERT INTO customers(personId, membership) VALUES ({person_id}, 0);"
+        cursor.execute(query3)
+        db.commit()
+    except get_error() as error:
+        print(error)
+        return False
 
     return True
 
@@ -47,18 +51,22 @@ def register_staff(username:str, password:str, firstName:str, lastName:str, sex:
     db = get_db()
     cursor = db.cursor()
 
-    # Queries for inserting new user to the database
-    query1 = "INSERT INTO person (username, password, firstName, lastName, sex, dateOfBirth) VALUES (%s, %s, %s, %s, %s, %s);"
-    query2 = "SELECT personId FROM person WHERE username=%s;"
+    try:
+        # Queries for inserting new user to the database
+        query1 = "INSERT INTO person (username, password, firstName, lastName, sex, dateOfBirth) VALUES (%s, %s, %s, %s, %s, %s);"
+        query2 = "SELECT personId FROM person WHERE username=%s;"
 
-    cursor.execute(query1, (username, password, firstName, lastName, sex, dateOfBirth))
-    db.commit()
+        cursor.execute(query1, (username, password, firstName, lastName, sex, dateOfBirth))
+        db.commit()
 
-    cursor.execute(query2, (username, ))
-    person_id = int(str(cursor.fetchone()).strip('(),')) # Converting from tuple to int
-    query3 = "INSERT INTO staffs (personId,position,branchId,serviceId) VALUES (%s, %s, %s, %s);"
-    cursor.execute(query3, (person_id, position.replace("\"", "\'"), branchId, serviceId))
-    db.commit()
+        cursor.execute(query2, (username, ))
+        person_id = int(str(cursor.fetchone()).strip('(),')) # Converting from tuple to int
+        query3 = "INSERT INTO staffs (personId,position,branchId,serviceId) VALUES (%s, %s, %s, %s);"
+        cursor.execute(query3, (person_id, position.replace("\"", "\'"), branchId, serviceId))
+        db.commit()
+    except get_error() as error:
+        print(error)
+        return False
 
     return True
 

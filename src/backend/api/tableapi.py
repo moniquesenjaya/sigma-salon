@@ -40,7 +40,7 @@ def get_all_tables() -> List:
         results.append(cursor.fetchall())
     except get_error() as error:
         print(error)
-        pass
+        return None
 
     return results
 
@@ -59,7 +59,7 @@ def get_appointments(staffId=None) -> Tuple:
             cursor.execute("SELECT a.appointmentId, a.date, a.startTime, a.endTime, a.staffId, a.custId, sr.serviceName, a.progress FROM appointments as a INNER JOIN services AS sr ON sr.serviceId = a.serviceId;")
     except get_error() as error:
         print(error)
-        pass
+        return None
 
     return cursor.fetchall()
 
