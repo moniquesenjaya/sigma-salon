@@ -1,8 +1,10 @@
-from flask import Blueprint, render_template, flash, request
-import json
+from flask import Blueprint, render_template, flash, request, redirect, url_for
+from datetime import datetime, timedelta
 import src.backend.api.tableapi as tableapi
 import src.backend.api.userapi as userapi
 from src.state import state
+import json
+
 
 views = Blueprint("views", __name__)
 
@@ -174,4 +176,56 @@ def manage_appointments():
 # Customer routes
 @views.route("/customer/book_appointments", methods=["GET", "POST"])
 def book_appointments():
+    if request.method == "POST" and state["logged_in"]:
+        branch = request.form.get("branchName")[2:-3]
+        service = request.form.get("serviceName")[2:-3]
+
+        return redirect(url_for("views.book_appointments_staff", branch=branch, service=service, state=state))
+
+    if state["logged_in"]:
+        branch_name = tableapi.get_branch_name()
+        service_name = tableapi.get_service_name()
+
+        return render_template("customer/book_appointments.html", state=state, branches=branch_name, services=service_name)
+
     return render_template("customer/book_appointments.html", state=state)
+
+
+@views.route("/customer/book_appointments_staff/<branch>/<service>", methods=["GET", "POST"])
+def book_appointments_staff(branch:str, service:str):
+    if request.method == "POST" and state["logged_in"]:
+        staff_id = request.form.get("staffId")
+
+        return redirect(url_for("views.book_appointments_time", branch=branch, service=service, staffId=int(staff_id)))
+
+    if state["logged_in"]:
+        staff = tableapi.get_available_staff(branch, service)
+
+        return render_template("customer/book_appointments_staff.html", state=state, branch=branch, service=service, staff=staff)
+
+    return render_template("customer/book_appointments_staff.html", state=state)
+
+
+@views.route("/customer/book_appointments_time/<branch>/<service>/<staffId>", methods=["GET", "POST"])
+def book_appointments_time(branch:str, service:str, staffId:int):
+    if request.method == "POST" and state["logged_in"]:
+        date = request.form.get("date")
+        time = request.form.get("time")
+        starttime = date + " " + time
+        time = datetime.strptime(time, "%H:%M:%S")
+        endtime = time + timedelta(minutes=float(tableapi.get_service_time(service)[0]))
+        endtime = date + " " + str(endtime)[-9:]
+
+        if datetime.strptime(date, "%Y-%m-%d") < datetime.now():
+            flash("Date cannot be less than today", category="error")
+        else:
+            tableapi.register_appointment(state["cust_id"], staffId, service, date, starttime, endtime)
+            flash("Appointment registered!", category="success")
+
+            return render_template("/customer/book_appointments_time.html", branch=branch, service=service, staffId=staffId, starttime=starttime, endtime=endtime, state=state)
+
+    if state["logged_in"]:
+        appointments = tableapi.get_staff_appointment(staffId)
+
+        return render_template("customer/book_appointments_time.html", branch=branch, service=service, staffId=staffId, appointments=appointments, state=state)
+    return render_template("customer/book_appointments_time.html", state=state)

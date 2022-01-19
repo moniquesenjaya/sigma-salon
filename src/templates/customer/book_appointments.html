@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+{% block content %}
+{# Check if user is logged in and is also a customer #}
+{% if not state["logged_in"] or not state["cust_id"] %}
+<h1>401 Error</h1>
+<h2>Unauthorized access</h2>
+{% else %}
+
+{% include 'message.html' %}
+
+<h1>Hello customer! Book your appointment today!</h1>
+<hr/>
+<br/>
+<form method="POST">
+  <div class="form-group">
+    <label for="branchName"><h3>Branch Name</h3></label>
+    <select name="branchName" id="inlineFormCustomSelect" class="custom-select mr-sm-2">
+      {% for i in range(branches|length) %}
+      <option value="{{branches[i]}}">{{branches[i][0]}}</option>
+      {% endfor %}
+    </select>
+  </div>
+  <br/>
+  <div class="form-group">
+    <label for="serviceName"><h3>Service Name</h3></label>
+    <select name="serviceName" id="inlineFormCustomSelect" class="custom-select mr-sm-2">
+      {% for i in range(services|length) %}
+      <option value="{{services[i]}}">{{services[i][0]}}</option>
+      {% endfor %}
+    </select>
+  </div>
+  <br/>
+  <button type="submit" class="btn btn-primary">Submit</button>
+  <br/>
+</form>
+{% endif %}
+{% endblock %}

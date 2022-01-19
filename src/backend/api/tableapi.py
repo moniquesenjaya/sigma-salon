@@ -1,8 +1,9 @@
+from typing import List, Tuple
 from src.backend.db import get_db, get_error
 import datetime
 
 
-def get_all_tables():
+def get_all_tables() -> List:
     results = []
 
     db = get_db()
@@ -44,7 +45,7 @@ def get_all_tables():
     return results
 
 
-def get_appointments(staffId=None):
+def get_appointments(staffId=None) -> Tuple:
     db = get_db()
     cursor = db.cursor()
 
@@ -63,13 +64,81 @@ def get_appointments(staffId=None):
     return cursor.fetchall()
 
 
-def get_query(query):
+def get_query(query) -> Tuple:
     db = get_db()
     cursor = db.cursor()
 
     try:
-        # Free query, except for certain queries
+        # Free query
         cursor.execute(query)
+    except get_error() as error:
+        return error
+
+    return cursor.fetchall()
+
+
+def get_branch_name() -> Tuple:
+    db = get_db()
+    cursor = db.cursor()
+
+    try:
+        # Query for getting branch names from branch table
+        cursor.execute("SELECT branchName from branch;")
+    except get_error() as error:
+        return error
+
+    return cursor.fetchall()
+
+
+def get_service_name() -> Tuple:
+    db = get_db()
+    cursor = db.cursor()
+
+    try:
+        # Query for getting service names from services table
+        cursor.execute("SELECT serviceName from services;")
+    except get_error() as error:
+        return error
+
+    return cursor.fetchall()
+
+
+def get_service_time(serviceName:str):
+    db = get_db()
+    cursor = db.cursor()
+
+    try:
+        # Query for getting time for a specific service
+        query = "SELECT time FROM services WHERE serviceName=%s;"
+        cursor.execute(query, (serviceName, ))
+    except get_error() as error:
+        return error
+
+    return cursor.fetchone()
+
+
+def get_available_staff(branchName:str, serviceName:str) -> Tuple:
+    db = get_db()
+    cursor = db.cursor()
+
+    try:
+        # Query for getting all available staff depending on branch and service name
+        query = "SELECT s.staffId, p.firstName, p.lastName, p.sex FROM person AS p INNER JOIN staffs AS s ON s.personId = p.personId  INNER JOIN branch AS b  ON b.branchId = s.branchId  INNER JOIN services AS sr ON sr.serviceId=s.serviceId WHERE b.branchName=%s AND sr.serviceName=%s;"
+        cursor.execute(query, (branchName, serviceName))
+    except get_error() as error:
+        return error
+
+    return cursor.fetchall()
+
+
+def get_staff_appointment(staffId:int) -> Tuple:
+    db = get_db()
+    cursor = db.cursor()
+
+    try:
+        # Query for getting appointments depending on staff id
+        query = "SELECT a.date, a.startTime, a.endTime FROM appointments as a INNER JOIN staffs AS s ON s.staffId=a.staffId WHERE a.staffId=%s AND a.progress='Not Done';"
+        cursor.execute(query, (staffId, ))
     except get_error() as error:
         return error
 
@@ -109,6 +178,24 @@ def register_service(service_name:str, time:int) -> bool:
     query = "INSERT INTO services (serviceName,time) VALUES (%s, %s);"
     cursor.execute(query, (service_name, time))
     db.commit()
+
+    return True
+
+
+def register_appointment(custId:int, staffId:int, serviceName:str, date:str, startTime:str, endTime:str):
+    db = get_db()
+    cursor = db.cursor()
+
+    try:
+        cursor.execute(f"SELECT serviceId FROM services WHERE serviceName='{serviceName}'")
+        serviceId = cursor.fetchone()[0]
+
+        # Query for inserting new appointment
+        query = "INSERT INTO appointments (custId, staffId, serviceId , date, startTime, endTime, progress) VALUES (%s, %s, %s, %s, %s, %s, 'Not Done');"
+        cursor.execute(query, (custId, staffId, serviceId, date, startTime, endTime))
+        db.commit()
+    except get_error() as error:
+        print(error)
 
     return True
 
@@ -171,3 +258,20 @@ def check_appointment(appointmentId:int) -> bool:
         return True
     else:
         return False
+
+
+def check_time(staffId:int, date:str, dateTime:str):
+    db = get_db()
+    cursor = db.cursor(buffered=True)
+
+    # Query for checking if an appointment can be made for a certain staff at a certain time and date
+    query = "SELECT appointmentId FROM appointments WHERE staffId=%s AND date=%s AND endtime < %s;"
+    cursor.execute(query, (staffId, date, dateTime))
+
+    res = cursor.fetchone()
+
+    # If appointment can be made, return True
+    if res:
+        return False
+    else:
+        return True
