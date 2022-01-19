@@ -7,7 +7,7 @@ def login_user(username: str, password: str) -> Tuple:
     cursor = db.cursor()
 
     # Query for comparing password in db with the one entered in
-    query = "SELECT p.personId, c.custId, s.position FROM person as p LEFT JOIN customers as c ON c.personId = p.personId LEFT JOIN staffs as s ON s.personId = p.personId WHERE username=%s and password=%s;"
+    query = "SELECT p.personId, c.custId, s.staffId, s.position FROM person as p LEFT JOIN customers as c ON c.personId = p.personId LEFT JOIN staffs as s ON s.personId = p.personId WHERE username=%s and password=%s;"
 
     cursor.execute(query, (username, password))
 
@@ -17,9 +17,10 @@ def login_user(username: str, password: str) -> Tuple:
 
     person_id = res[0]
     cust_id = res[1]
-    position = res[2]
+    staff_id = res[2]
+    position = res[3]
 
-    return (person_id, cust_id, position)
+    return (person_id, cust_id, staff_id, position)
 
 
 def register_user(username:str, password:str, firstName:str, lastName:str, sex:str, dateOfBirth:str) -> bool:

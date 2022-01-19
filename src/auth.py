@@ -1,7 +1,6 @@
 from flask import Blueprint, render_template, flash, request, redirect, url_for, jsonify
 import src.backend.api.userapi as userapi
 from src.state import state
-import time
 
 auth = Blueprint("auth", __name__)
 
@@ -28,7 +27,8 @@ def login():
             state["username"] = username
             state["person_id"] = result[0]
             state["cust_id"] = result[1]
-            state["position"] = result[2]
+            state["staff_id"] = result[2]
+            state["position"] = result[3]
             state["logged_in"] = True
             return redirect(url_for("views.index"))
 
@@ -40,8 +40,9 @@ def logout():
     state["username"] = ""
     state["person_id"] = None
     state["cust_id"] = None
-    state["logged_in"] = False
+    state["staff_id"] = None
     state["position"] = None
+    state["logged_in"] = False
     return redirect(url_for("views.index"))
 
 

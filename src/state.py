@@ -5,6 +5,7 @@ state = {
     "username": "",
     "person_id": None,
     "cust_id": None,
+    "staff_id": None,
     "position": None,
     "logged_in": False,
 }
