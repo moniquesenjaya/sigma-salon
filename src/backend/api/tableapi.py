@@ -1,6 +1,7 @@
 from src.backend.db import get_db, get_error
 import datetime
 
+
 def get_all_tables():
     results = []
 
@@ -43,13 +44,18 @@ def get_all_tables():
     return results
 
 
-def get_appointments():
+def get_appointments(staffId=None):
     db = get_db()
     cursor = db.cursor()
 
     try:
-        # Query appointments table and service table to get appointments data
-        cursor.execute("SELECT a.appointmentId, a.date, a.startTime, a.endTime, a.staffId, a.custId, sr.serviceName, a.progress FROM appointments as a INNER JOIN services AS sr ON sr.serviceId = a.serviceId;")
+        if staffId:
+            # Query appointsment, service, and person table to get appointments data of a specific staffId
+            query = "SELECT a.appointmentId, a.date, a.startTime, a.endTime, sr.serviceName, p.firstName, p.lastName FROM appointments as a INNER JOIN staffs AS s ON s.staffId = a.staffId INNER JOIN services AS sr ON sr.serviceId = a.serviceId INNER JOIN customers AS c ON c.custId = a.custId INNER JOIN person AS p ON p.personId = c.personId WHERE a.staffId = %s AND a.progress = 'Not Done';"
+            cursor.execute(query, (staffId, ))
+        else:
+            # Query appointments table and service table to get all appointments data
+            cursor.execute("SELECT a.appointmentId, a.date, a.startTime, a.endTime, a.staffId, a.custId, sr.serviceName, a.progress FROM appointments as a INNER JOIN services AS sr ON sr.serviceId = a.serviceId;")
     except get_error() as error:
         print(error)
         pass
@@ -81,6 +87,7 @@ def register_branch(seatLimit:int, branchName:str, city:str) -> bool:
 
     return True
 
+
 def register_salary(staffId:int, amount:int) -> bool:
     db = get_db()
     cursor = db.cursor()
@@ -93,6 +100,7 @@ def register_salary(staffId:int, amount:int) -> bool:
 
     return True
 
+
 def register_service(service_name:str, time:int) -> bool:
     db = get_db()
     cursor = db.cursor()
@@ -103,6 +111,19 @@ def register_service(service_name:str, time:int) -> bool:
     db.commit()
 
     return True
+
+
+def update_appointment(appointmentId:int) -> bool:
+    db = get_db()
+    cursor = db.cursor()
+
+    # Query for updating appointment
+    query = "UPDATE appointments SET progress = 'Done' WHERE appointmentId = %s;"
+    cursor.execute(query, (appointmentId, ))
+    db.commit()
+
+    return True
+
 
 def check_branch(branchId:int) -> bool:
     db = get_db()
@@ -126,6 +147,22 @@ def check_service(serviceId:int) -> bool:
 
     # Query for checking all serviceId from services table
     query = f"SELECT serviceId FROM services WHERE serviceId={serviceId};"
+    cursor.execute(query)
+
+    res = cursor.fetchone()
+
+    if res:
+        return True
+    else:
+        return False
+
+
+def check_appointment(appointmentId:int) -> bool:
+    db = get_db()
+    cursor = db.cursor(buffered=True)
+
+    # Query for checking all serviceId from services table
+    query = f"SELECT appointmentId FROM appointments WHERE appointmentId={appointmentId};"
     cursor.execute(query)
 
     res = cursor.fetchone()

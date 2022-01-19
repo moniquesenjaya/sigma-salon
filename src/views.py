@@ -2,7 +2,6 @@ from flask import Blueprint, render_template, flash, request
 import json
 import src.backend.api.tableapi as tableapi
 import src.backend.api.userapi as userapi
-import requests as r
 from src.state import state
 
 views = Blueprint("views", __name__)
@@ -144,15 +143,31 @@ def manage_staff():
 def view_appointments():
     if state["logged_in"]:
         result = tableapi.get_appointments()
-        print(result)
 
         return render_template("admin/view_appointments.html", state=state, appointments=result)
+
     return render_template("admin/view_appointments.html", state=state)
 
 
 # Staff routes
 @views.route("/staff/manage_appointments", methods=["GET", "POST"])
 def manage_appointments():
+    if request.method == "POST" and state["logged_in"]:
+        appointment_id = request.form.get("appointmentId")
+
+        if not tableapi.check_appointment(appointment_id):
+            flash("AppointmentId doesn't exist!", category="error")
+        else:
+            # Mark appointment as done in database
+            tableapi.update_appointment(appointment_id)
+
+            flash("Appointment updated!", category="success")
+            return render_template("staff/manage_appointments.html", state=state)
+
+    if state["logged_in"]:
+        result = tableapi.get_appointments(state["staff_id"])
+        return render_template("staff/manage_appointments.html", state=state, appointments=result)
+
     return render_template("staff/manage_appointments.html", state=state)
 
 
