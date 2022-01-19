@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 {% block content %}
-{# Check if user is logged in and is also an admin #}
+{# Check if user is logged in and is also a Staff #}
 {% if not state["logged_in"] or not state["position"] == "Staff" %}
 <h1>401 Error</h1>
 <h2>Unauthorized access</h2>

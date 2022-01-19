@@ -1,9 +1,9 @@
-from flask import Flask, render_template
+from flask import Flask
 from decouple import config
 
 def create_app():
     app = Flask(__name__)
-    app.config['SECRET_KEY'] = config('SECRET_KEY')
+    app.config["SECRET_KEY"] = config("SECRET_KEY")
 
     from src.views import views
     from src.auth import auth

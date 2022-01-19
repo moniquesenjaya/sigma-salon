@@ -19,7 +19,6 @@ def index():
 def all_tables():
     if state["logged_in"]:
         result = tableapi.get_all_tables()
-
         return render_template("admin/all_tables.html", state=state, tables=result)
 
     return render_template("admin/all_tables.html", state=state)
@@ -30,7 +29,6 @@ def free_query():
     if request.method == "POST" and state["logged_in"]:
         query = request.form.get("query")
         result = tableapi.get_query(query)
-
         return render_template("admin/free_query.html", state=state, result=json.dumps(result, default=str)) # set default to str in order to handle date objects
 
     return render_template("admin/free_query.html", state=state, query=None)
