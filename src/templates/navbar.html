@@ -25,10 +25,10 @@
           <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
             {# Possible actions will be different depending on the position #}
             {% if state["position"] == "Admin" %}
-            <li><a class="dropdown-item" href="{{url_for('views.manage_staff')}}">Manage Staff</a></li>
-            <li><a class="dropdown-item" href="{{url_for('views.manage_salary')}}">Manage Salary</a></li>
-            <li><a class="dropdown-item" href="{{url_for('views.manage_service')}}">Manage Service</a></li>
-            <li><a class="dropdown-item" href="{{url_for('views.manage_branch')}}">Manage Branch</a></li>
+            <li><a class="dropdown-item" href="{{url_for('views.manage_staff')}}">Add Staff</a></li>
+            <li><a class="dropdown-item" href="{{url_for('views.manage_salary')}}">Add Salary</a></li>
+            <li><a class="dropdown-item" href="{{url_for('views.manage_service')}}">Add Service</a></li>
+            <li><a class="dropdown-item" href="{{url_for('views.manage_branch')}}">Add Branch</a></li>
             <li><a class="dropdown-item" href="{{url_for('views.free_query')}}">Free Query</a></li>
             <li><hr class="dropdown-divider"></li>
             <li><a class="dropdown-item" href="{{url_for('views.view_appointments')}}">View appointments</a></li>
